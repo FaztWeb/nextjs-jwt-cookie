@@ -1,8 +1,8 @@
-import React from 'react'
-
 function Indexpage() {
   return (
-    <div>Indexpage</div>
+    <div>
+      <h1>Index Page</h1>
+    </div>
   )
 }
 

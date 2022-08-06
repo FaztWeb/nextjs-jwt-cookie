@@ -1,18 +1,30 @@
 import axios from "axios";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 function Dashboard() {
+  const [user, setUser] = useState({
+    email: "",
+    username: "",
+  });
+  const router = useRouter();
+
   const getProfile = async () => {
     const profile = await axios.get("/api/profile");
-    console.log(profile);
+    setUser(profile.data);
   };
 
   const logout = async () => {
-    const logout = await axios.get("/api/auth/logout");
-    console.log(logout);
+    try {
+      await axios.get("/api/auth/logout");
+    } catch (error) {
+      console.error(error.message);
+    }
+    router.push("/login");
   };
   return (
     <div>
-      Personal data
+      {JSON.stringify(user)}
       <button onClick={() => getProfile()}>profile</button>
       <button onClick={() => logout()}>Logout</button>
     </div>
