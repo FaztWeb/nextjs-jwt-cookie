@@ -1,8 +1,8 @@
 import { sign } from "jsonwebtoken";
-import { serialize } from "cookie";
+import { NextResponse } from "next/server";
 
-export default function loginHandler(req, res) {
-  const { email, password } = req.body;
+export async function POST(request) {
+  const { email, password } = await request.json();
 
   if (email === "admin@local.local" && password === "admin") {
     // expire in 30 days
@@ -15,7 +15,13 @@ export default function loginHandler(req, res) {
       "secret"
     );
 
-    const serialized = serialize("myTokenName", token, {
+    const response = NextResponse.json({
+      token,
+    });
+
+    response.cookies.set({
+      name: "myTokenName",
+      value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -23,11 +29,15 @@ export default function loginHandler(req, res) {
       path: "/",
     });
 
-    res.setHeader("Set-Cookie", serialized);
-    return res.status(200).json({
-      message: "Login successful",
-    });
+    return response;
+  } else {
+    return NextResponse.json(
+      {
+        message: "Invalid credentials",
+      },
+      {
+        status: 401,
+      }
+    );
   }
-
-  return res.status(401).json({ error: "Invalid credentials" });
 }

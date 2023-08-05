@@ -1,6 +1,8 @@
+"use client";
+
 import axios from "axios";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 function Dashboard() {
   const [user, setUser] = useState({
@@ -16,7 +18,8 @@ function Dashboard() {
 
   const logout = async () => {
     try {
-      await axios.get("/api/auth/logout");
+      const res = await axios.get("/api/auth/logout");
+      console.log(res);
     } catch (error) {
       console.error(error.message);
     }

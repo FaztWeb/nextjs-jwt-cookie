@@ -20,10 +20,9 @@ export async function middleware(request) {
 
   try {
     const { payload } = await jwtVerify(
-      jwt,
+      jwt.value,
       new TextEncoder().encode("secret")
     );
-    console.log({ payload });
     return NextResponse.next();
   } catch (error) {
     return NextResponse.redirect(new URL("/login", request.url));
